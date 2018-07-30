@@ -139,8 +139,8 @@ def get_input():
         if (keystrk == 'q'):
             print('You pressed \'q\'... Quitting')
             mainLoopFlag= False
-        if (keystrk == 'c'):
-            print('You pressed \'c\'... Changing Epsilon')
+        if (keystrk == 'z'):
+            print('You pressed \'z\'... Changing z_epsilon')
             epsilonFlag = True
 
 mainfoo = threading.Thread(target=run2)

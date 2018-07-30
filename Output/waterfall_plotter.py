@@ -4,15 +4,12 @@ import matplotlib.pyplot as plt
 import os
 import imageio
 
-root_path = 'Output/Friday27.14:33:33@10/'
+root_path = 'Friday27.14:33:33@10/'
 
 input_folder = root_path + 'pickles/'
 png_folder = root_path + 'genotypes/'
 
-
 genotype_list = []
-
-
 
 def pickle_grabber():
     os.mkdir(png_folder)

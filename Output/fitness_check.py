@@ -17,7 +17,7 @@ calc_points = int(input("Enter calc_points :"))
 
 
 # Setting more global variables:
-folder = 'Output/Monday30.13:24:42@10'
+folder = 'Monday30.13:24:42@10'
 zlist       = np.linspace(0,calc_z_max,calc_points)
 a           = 0.25   # Radius of coil
 loop_number = None # To be changed by input file
