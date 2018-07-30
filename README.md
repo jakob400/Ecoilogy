@@ -19,6 +19,7 @@ __Genotype:__ The sum total of the genetic material. The loops on both the posit
 
 
 ## Important algorithm-specific definitions:
+--------------------------------
 __Parent Fraction:__ The fraction of the total population selected to be parents, according to their superior fitness.
 
 __Lucky Probability:__ The chance that some of the less fit amongst the population will become parents. This has the purpose of maintaining genetic diversity within a population, to help avoid local minima.
@@ -29,6 +30,7 @@ __(z or I) epsilon:__ Once a chromosome has been selected for mutation, this is 
 
 
 ## How to run the GA:
+--------------------------------
 The program can be run by executing *main.py*:
 
 `python3 main.py`
@@ -45,6 +47,7 @@ Note: sometimes the **ENTER** key must be pressed multiple times before this mes
 
 
 ## How to analyze output from the GA:
+--------------------------------
 If the program has been quit successfully using the `q` command, there should be a new folder in the *Output/* directory, along with various output files, as well as a folder of all the chromosomes of the best individual from each generation that experienced a genetic advancement. These are stored as pickled data structures.
 
 Even if the program was quit abruptly or unintentionally, the pickled structures should still be present for analysis.
@@ -65,6 +68,23 @@ At the top of each of these scripts, there is a variable declaration for the str
 
 `folder = 'Friday27.14:33:33@10/'`
 
+
+## Different mutation schemes:
+--------------------------------
+
+### Pileup:
+
+Any chromosomes which have been mutated past their I_max or z_max, will be replaced with their I_max or z_max.
+
+
+### Reflect
+
+Here, any chromosomes which have been mutated past their I_max or z_max, will be reflected back **before** their I_max or z_max by an equal amount.
+
+
+### Redraw
+
+Finally, this scheme replaces faulty chromosomes with randomly redrawn chromosomes within the appropriate ranges for position and current.
 
 
 
