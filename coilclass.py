@@ -231,7 +231,6 @@ class Coil:
         a               = self.radius
         N               = self.loop_number # Total numer of loops available
         field_points    = self.zlist
-        a               = self.radius
 
         # Building genetics:
         chromosomes = gen.lw_ChromGen(N, a)

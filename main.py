@@ -3,7 +3,7 @@ from populationclass import *
 from writer import *
 import timeit
 
-import genetix as mag
+import genetix as gen
 
 from pprint import pprint
 import time
@@ -19,7 +19,7 @@ if True:
     os.system('cls' if os.name == 'nt' else 'clear')
     os.system('cls' if os.name == 'nt' else 'clear')
     print(' =========================================== ')
-    print('|-|   Ecoilogy: Version 1.0.2             |-|')
+    print('|-|   Ecoilogy: Version 1.0.3             |-|')
     print('|-|   Author: J Weirathmueller            |-|')
     print('|-|   Last Updated: July 30, 2018         |-|')
     print(' =========================================== \n\n')

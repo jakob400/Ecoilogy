@@ -53,7 +53,7 @@ If the program has been quit successfully using the `q` command, there should be
 Even if the program was quit abruptly or unintentionally, the pickled structures should still be present for analysis.
 
 
-Within the *Output/* directory, the two relevant extraction scripts are *waterfall_plotter.py* and *fitness_check.py*. Here's a quick summary of their roles:
+Within the main directory, the two relevant extraction scripts are *waterfall_plotter.py* and *fitness_check.py*. Here's a quick summary of their roles:
 
 #### waterfall_plotter.py:
 
@@ -66,7 +66,7 @@ This allows the user to input the range and number of of analysis points over wh
 ### How to run these:
 At the top of each of these scripts, there is a variable declaration for the string variable `folder`. Simply change the stored string to the output folder of interest:
 
-`folder = 'Friday27.14:33:33@10/'`
+`folder = 'Output/Friday27.14:33:33@10/'`
 
 
 ## Different mutation schemes:

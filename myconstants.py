@@ -14,7 +14,7 @@ SPLIT = False
 #TODO: Write conditional here to check if more than one breeding method or mutation method are active.
 
 
-radius = 1
+radius = 0.25
 
 loop_number = 100 # Keep this an even number #TOTAL number of loops
 z_min = 0
@@ -27,8 +27,7 @@ I_epsilon = 0.0
 
 # Defining range of homogeneity calculation
 calc_z_min = 0
-calc_z_max = 2 #z_max # Lee-Whiting crosses at 0.6
-
+calc_z_max = 0.5
 calc_points = 10
 
 init_fitness = 0

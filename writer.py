@@ -8,6 +8,7 @@ import datetime
 from decimal import Decimal
 import pickle
 
+
 now = datetime.datetime.now()
 
 destination = 'Output/'
@@ -35,7 +36,6 @@ def genotype_writer(genotype):
             pickle.dump(genotype, f)
             f.close()
             break
-
 
 def results_output(pop,runtime):
 
