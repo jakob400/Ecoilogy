@@ -14,6 +14,19 @@ mainLoopFlag = True
 epsilonFlag = False
 Option = ''
 
+
+if True:
+    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(' =========================================== ')
+    print('|-|   Ecoilogy: Version 1.0.0             |-|')
+    print('|-|   Author: J Weirathmueller            |-|')
+    print('|-|   Last Updated: July 30, 2018         |-|')
+    print(' =========================================== ')
+
+
+
+
 ## TODO: Vectorize Population() methods
 ## TODO: Add function for random number generators (maybe, ask Dave).
 ## TODO: See why children update is slow (culprit is probably in crossover, time this as well).
