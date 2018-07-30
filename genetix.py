@@ -3,8 +3,6 @@ import math
 import copy
 import random
 
-from pprint import pprint
-
 def chrom2geno(chromosomes):
     """
     Converts chromosomes to genotype.

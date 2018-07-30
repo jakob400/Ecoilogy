@@ -17,7 +17,7 @@ calc_points = int(input("Enter calc_points :"))
 
 
 # Setting more global variables:
-folder = 'Monday30.13:24:42@10'
+folder = 'Monday30.13:24:42@10/'
 zlist       = np.linspace(0,calc_z_max,calc_points)
 a           = 0.25   # Radius of coil
 loop_number = None # To be changed by input file
@@ -32,7 +32,7 @@ show_points = np.linspace(0,1.5, show_points_number)
 def ext_init(): # Reads in data
 
     global loop_number
-    destination1 = folder + '/chromloc.txt'
+    destination1 = folder + 'chromloc.txt'
     ext_positions = np.genfromtxt(destination1)
     ext_chromosomes = [{'z' : z, 'I' : 1} for z in ext_positions]
     ext_genotype = gen.chrom2geno(ext_chromosomes)
@@ -62,7 +62,7 @@ def field_plotter():
     plt.legend()
 
     plt.grid()
-    plt.savefig(folder + '/Fields.png')
+    plt.savefig(folder + 'Fields.png', dpi=400)
     plt.show()
     plt.clf()
     plt.close()
@@ -90,7 +90,7 @@ def err_plotter():
     plt.legend()
     plt.grid()
 
-    plt.savefig(folder + '/PPM.png')
+    plt.savefig(folder + 'PPM.png', dpi=400)
 
     plt.show()
     plt.clf()
