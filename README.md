@@ -52,9 +52,11 @@ Even if the program was quit abruptly or unintentionally, the pickled structures
 Within the *Output/* directory, the two relevant extraction scripts are *waterfall_plotter.py* and *fitness_check.py*. Here's a quick summary of their roles:
 
 ###### waterfall_plotter.py
+======
 This extracts all the of the pickled chromosomes, and then plots their positions along the z-axis, descending vertically according to generation number.
 
 ###### fitness_check.py
+======
 This allows the user to input the range and number of of analysis points over which they wish to calculate homogeneity for the **best coil in the last generation** . This also produces and saves plots which depict the field along the axis as well.
 
 ##### How to run these:
