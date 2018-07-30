@@ -19,7 +19,7 @@ if True:
     os.system('cls' if os.name == 'nt' else 'clear')
     os.system('cls' if os.name == 'nt' else 'clear')
     print(' =========================================== ')
-    print('|-|   Ecoilogy: Version 1.0.0             |-|')
+    print('|-|   Ecoilogy: Version 1.0.2             |-|')
     print('|-|   Author: J Weirathmueller            |-|')
     print('|-|   Last Updated: July 30, 2018         |-|')
     print(' =========================================== \n\n')
@@ -33,45 +33,7 @@ if True:
 ## TODO: Check FIXME's
 ## TODO: don't mutate AFTER children have been combined with parents, do it to new species only
 
-
-
-def timer():
-    start = timeit.default_timer()
-    pop = Population()
-    end = timeit.default_timer()
-    print('pop init is ', end-start)
-
-    #for i in range(100):
-
-    start = timeit.default_timer()
-    pop.best_fitness_append()
-    end = timeit.default_timer()
-    print('append is ', end-start)
-
-    start = timeit.default_timer()
-    pop.parents_update()
-    end = timeit.default_timer()
-    print('parents is ', end-start)
-
-    start = timeit.default_timer()
-    pop.children_update()
-    end = timeit.default_timer()
-    print('children is ', end-start)
-
-    start = timeit.default_timer()
-    pop.mutate()
-    end = timeit.default_timer()
-    print('mutate is ', end-start)
-
-    start = timeit.default_timer()
-    pop.population_update()
-    end = timeit.default_timer()
-    print('pop update is', end-start)
-    #print(i)
-    print('Best Fitness is ', pop.best_fitness)
-
-
-def run2():
+def evolver():
     application_start = timeit.default_timer()
 
     pop = Population()
@@ -88,11 +50,11 @@ def run2():
 
         pop.individuals = pop.order(pop.individuals)
 
-        pop.best_fitness_append()
         pop.parents_update()
         pop.children_update()
         pop.mutate()
         pop.population_update()
+        pop.best_fitness_append()
 
         pprint(gen.coil_order(pop.individuals[0].chromosomes))
         print('Best Fitness is:        ' + str(round(pop.best_fitness[-1],5)) + '\t\tEpsilon is ' + str(Coil.epsilon))
@@ -155,7 +117,7 @@ def get_input():
             print('You pressed \'z\'... Changing z_epsilon')
             epsilonFlag = True
 
-mainfoo = threading.Thread(target=run2)
+mainfoo = threading.Thread(target=evolver)
 controlfoo = threading.Thread(target=get_input)
 
 mainfoo.start()

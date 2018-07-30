@@ -50,7 +50,8 @@ def random_kGen(epsilon, shape):
     Ouput: Mutation vector 'k'.
     """
 
-    k = np.random.uniform(-epsilon, epsilon, shape)
+    #k = np.random.uniform(-epsilon, epsilon, shape)
+    k = np.random.normal(0, epsilon, shape)
 
     return k
 
