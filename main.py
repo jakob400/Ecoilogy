@@ -22,9 +22,8 @@ if True:
     print('|-|   Ecoilogy: Version 1.0.0             |-|')
     print('|-|   Author: J Weirathmueller            |-|')
     print('|-|   Last Updated: July 30, 2018         |-|')
-    print(' =========================================== ')
-
-
+    print(' =========================================== \n\n')
+    input('Press any button to begin...')
 
 
 ## TODO: Vectorize Population() methods
@@ -148,7 +147,7 @@ def get_input():
 
     # thread doesn't continue until key is pressed
     while mainLoopFlag:
-        keystrk=input('Press a command then <ENTER> to stop... \n')
+        keystrk=input('Press a command then <ENTER> to modify/stop run... \n')
         if (keystrk == 'q'):
             print('You pressed \'q\'... Quitting')
             mainLoopFlag= False
