@@ -4,6 +4,7 @@ A genetic algorithm (GA) designed to optimize coil design according to axial fie
 
 
 ## Important general definitions:
+--------------------------------
 __Population:__ A group of individuals, where individuals are referring to individual coils.
 
 __Coil:__ A group of wire loops coaxial with the z-axis. Can be also referred to as an "individual" according to the evolutionary analogy. Each individual is conceptually structured around its genetic material, which is to be manipulated by the GA.
