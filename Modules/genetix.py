@@ -255,3 +255,37 @@ def redrawCorrect(mutated_positions, mutated_currents, loop_z_min, loop_z_max, c
     corrected_chromosomes = [ {'z' : pos, 'I' : cur} for pos,cur in zip(mutated_positions, mutated_currents) ]
 
     return corrected_chromosomes
+
+def evolution_cycle(pop):
+    """
+    Performs cycle operation on population to advance generation.
+
+    Input: Population instance.
+    Output: Population instance.
+    """
+
+    pop.individuals = pop.order(pop.individuals)
+    pop.parents_update()
+    pop.children_update()
+    pop.mutate()
+    pop.population_update()
+    pop.best_fitness_append()
+
+    return pop
+
+def last_difference_calc(best_fitness_list):
+    """
+    Calculates how many generations have passed since the last change.
+
+    Input: List of best fitnesses from all generations so far.
+    Output: Number of generations since last change.
+    """
+    last_difference = 0
+
+    for i in range(1, len(best_fitness_list) + 1):
+        if (best_fitness_list[-i] == best_fitness_list[-i-1]):
+            last_difference += 1
+        else:
+            break
+
+    return last_difference
