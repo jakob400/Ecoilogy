@@ -30,7 +30,7 @@ __(z or I) epsilon:__ Once a chromosome has been selected for mutation, this is 
 ## How to run the GA:
 The program can be run by executing `main.py`:
 
-`python3 main.py`
+`$ python3 main.py`
 
 Once the program has started, it can be closed by pressing `q` and then the **ENTER** key.
 
