@@ -4,7 +4,6 @@ A genetic algorithm (GA) designed to optimize coil design according to axial fie
 
 
 ## Important general definitions:
----
 __Population:__ A group of individuals, where individuals are referring to individual coils.
 
 __Coil:__ A group of wire loops coaxial with the z-axis. Can be also referred to as an "individual" according to the evolutionary analogy. Each individual is conceptually structured around its genetic material, which is to be manipulated by the GA.
@@ -19,7 +18,6 @@ __Genotype:__ The sum total of the genetic material. The loops on both the posit
 
 
 ## Important algorithm-specific definitions:
----
 __Parent Fraction:__ The fraction of the total population selected to be parents, according to their superior fitness.
 
 __Lucky Probability:__ The chance that some of the less fit amongst the population will become parents. This has the purpose of maintaining genetic diversity within a population, to help avoid local minima.
@@ -30,7 +28,6 @@ __(z or I) epsilon:__ Once a chromosome has been selected for mutation, this is 
 
 
 ## How to run the GA:
----
 The program can be run by executing `main.py`:
 
 `python3 main.py`
@@ -47,7 +44,6 @@ Note: sometimes the **ENTER** key must be pressed multiple times before this mes
 
 
 ## How to analyze output from the GA:
----
 If the program has been quit successfully using the `q` command, there should be a new folder in the `Output/` directory, along with various output files, as well as a folder of all the chromosomes of the best individual from each generation that experienced a genetic advancement. These are stored as pickled data structures.
 
 Even if the program was quit abruptly or unintentionally, the pickled structures should still be present for analysis.
@@ -55,7 +51,6 @@ Even if the program was quit abruptly or unintentionally, the pickled structures
 After a successful quit, main.py will produce images relating to the run and leave them in the appropriate `Output/~` directory.
 
 ## Folder Map:
----
 ### Output
 Contains the output folders for every run, with various output information and graphics.
 
@@ -84,7 +79,6 @@ Contains the functionality to create the proper `Output/` directory for a given 
 Contains `graphical.py`, whose job it is to create plots to outline and visually demonstrate the key aspects of a given run.
 
 ## Different mutation schemes:
----
 
 ### Pileup:
 
@@ -102,5 +96,5 @@ Finally, this scheme replaces faulty chromosomes with randomly redrawn chromosom
 
 
 
-
+## Assorted notes:
 The only file which should be modified to alter evolutionary performance/population parameters/coil parameters is `myconstants.py.`
