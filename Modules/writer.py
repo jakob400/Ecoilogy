@@ -92,7 +92,7 @@ def results_output(pop,runtime):
 
     g.field_plot(new_directory, pop.individuals[0].genotype)
 
-    g.field_plot(new_directory, pop.individuals[0].genotype)
+    g.err_plot(new_directory, pop.individuals[0].genotype)
 
     g.hist_plot(new_directory, pop.individuals[0].genotype)
 

@@ -2,8 +2,8 @@
 GRAPHICAL = False
 
 # Mutation Method:
-PILEUP = True
-REFLECTION = False # Broken
+PILEUP = False
+REFLECTION = True # Broken
 REDRAW = False
 SPREADOUT = False # Broken
 

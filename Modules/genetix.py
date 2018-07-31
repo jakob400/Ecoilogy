@@ -181,23 +181,37 @@ def pileupCorrect(mutated_positions, mutated_currents, loop_z_min, loop_z_max, c
     Output: Corrected chromosomes.
     """
 
-    mutated_currents = np.array(mutated_currents)
+    currents    = np.array(mutated_currents)
+    positions   = np.array(mutated_positions)
 
     z_min = loop_z_min
     z_max = loop_z_max
-    #I_min = current_min
+    I_min = current_min
     I_max = current_max
 
-    positions_temp1 = (mutated_positions >= z_max).astype(int) * z_max # Turns <z_max to zero, replaces >=z_max with z_max
-    currents_temp1  = (mutated_currents  >= I_max).astype(int) * I_max
+    ## Converting values to Boolean equivalents:
+    Bool_bad_above_positions = (positions > z_max).astype(int) # All values above threshold
+    Bool_bad_below_positions = (positions < z_min).astype(int) # All values below threshold
+    Bool_good_positions      = (Bool_bad_above_positions == Bool_bad_below_positions).astype(int) # All values at or within thresholds
 
-    positions_temp2 = (mutated_positions < z_max).astype(int) * mutated_positions # turns >0.5 to zero, replaces <0.5 with initial mutated chromosomes
-    currents_temp2  = (mutated_currents  < I_max).astype(int) * mutated_currents
+    Bool_bad_above_currents  = (currents > I_max).astype(int)
+    Bool_bad_below_currents  = (currents < I_min).astype(int)
+    Bool_good_currents       = (Bool_bad_above_currents == Bool_bad_below_currents).astype(int)
 
-    mutated_positions = positions_temp1 + positions_temp2
-    mutated_currents  = currents_temp1 + currents_temp2
+    ## Using Boolean arrays to isolate bad values and replace with thresholds
+    corrected_above_positions   = Bool_bad_above_positions * z_max # Converting bad above to upper threshold
+    corrected_below_positions   = Bool_bad_below_positions * z_min # Converting bad below to lower threshold
+    good_initial_positions      = Bool_good_positions * positions # Retaining good values
 
-    corrected_chromosomes = [ {'z' : pos, 'I' : cur} for pos,cur in zip(mutated_positions, mutated_currents) ] # Recreates appropriate list of dicts
+    corrected_above_currents   = Bool_bad_above_currents * I_max
+    corrected_below_currents   = Bool_bad_below_currents * I_min
+    good_initial_currents      = Bool_good_currents * currents
+
+    ## Recombining
+    corrected_positions = corrected_above_positions + corrected_below_positions + good_initial_positions # Combining to correct
+    corrected_currents  = corrected_above_currents  + corrected_below_currents  + good_initial_currents
+
+    corrected_chromosomes = [ {'z' : pos, 'I' : cur} for pos,cur in zip(corrected_positions, corrected_currents) ]
 
     return corrected_chromosomes
 
@@ -210,21 +224,44 @@ def reflectCorrect(mutated_positions, mutated_currents, loop_z_min, loop_z_max, 
     Output: Corrected chromosomes.
     """
 
+    currents    = np.array(mutated_currents)
+    positions   = np.array(mutated_positions)
+
     z_min = loop_z_min
     z_max = loop_z_max
     I_min = current_min
     I_max = current_max
 
-    positions_temp1 = (mutated_positions > z_max).astype(int) - (mutated_positions > z_max).astype(int) * mutated_positions # 1 - z* on values > 0.5, turns <0.5 to zero
-    currents_temp1  = (mutated_currents  > I_max).astype(int) - (mutated_currents > I_max).astype(int) * mutated_currents
+    ## Converting values to Boolean equivalents:
+    Bool_bad_above_positions = (positions > z_max).astype(int)
+    Bool_bad_below_positions = (positions < z_min).astype(int)
+    Bool_good_positions      = (Bool_bad_above_positions == Bool_bad_below_positions).astype(int)
 
-    positions_temp2 = (mutated_positions <= z_max).astype(int) * mutated_positions # turns >0.5 to zero, returns <=0.5 values
-    currents_temp2  = (mutated_currents  <= I_max).astype(int) * mutated_currents
+    Bool_bad_above_currents = (currents > I_max).astype(int)
+    Bool_bad_below_currents = (currents < I_min).astype(int)
+    Bool_good_currents      = (Bool_bad_above_currents == Bool_bad_below_currents).astype(int)
 
-    mutated_positions = positions_temp1 + positions_temp2
-    mutated_currents  = currents_temp1  + currents_temp2
+    ## Getting back arrays with only the relevant parts as nonzero:
+    bad_above_positions     = Bool_bad_above_positions * positions # All values above threshold
+    bad_below_positions     = Bool_bad_below_positions * positions # All values below threshold
+    good_initial_positions  = Bool_good_positions      * positions # All values at or within thresholds
 
-    corrected_chromosomes = [ {'z' : pos, 'I' : cur} for pos,cur in zip(mutated_positions, mutated_currents) ]
+    bad_above_currents      = Bool_bad_above_currents * currents
+    bad_below_currents      = Bool_bad_below_currents * currents
+    good_initial_currents   = Bool_good_currents      * currents
+
+    ## Formula: 2 * z_max - z_mut = z_cor
+    corrected_above_positions = 2 * z_max * Bool_bad_above_positions - bad_above_positions
+    corrected_below_positions = 2 * z_min * Bool_bad_below_positions - bad_below_positions
+
+    corrected_above_currents = 2 * z_max * Bool_bad_above_currents - bad_above_currents
+    corrected_below_currents = 2 * z_min * Bool_bad_below_currents - bad_below_currents
+
+    ## Combining to correct
+    corrected_positions = corrected_above_positions + corrected_below_positions + good_initial_positions # Combining to correct
+    corrected_currents  = corrected_above_currents  + corrected_below_currents  + good_initial_currents
+
+    corrected_chromosomes   = [ {'z' : pos, 'I' : cur} for pos,cur in zip(corrected_positions, corrected_currents) ]
 
     return corrected_chromosomes
 
