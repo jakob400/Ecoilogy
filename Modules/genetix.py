@@ -317,6 +317,7 @@ def last_difference_calc(best_fitness_list):
     Input: List of best fitnesses from all generations so far.
     Output: Number of generations since last change.
     """
+    #TODO: Ask dave if there is a better way to do this
     last_difference = 0
 
     for i in range(1, len(best_fitness_list) + 1):

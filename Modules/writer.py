@@ -1,33 +1,31 @@
 import Modules.myconstants as myconst
-import Analysis.graphical as g
+import Analysis.graphical as graphical
+import Modules.genetix as gen
 
 import numpy as np
-
 import os
-import time
 import datetime
-from decimal import Decimal
 import pickle
+import copy
 
 #TODO: Clean this up
-
 
 now = datetime.datetime.now()
 
 destination = 'Output/'
 time_name = now.strftime('%A%d.%X')
 important_params = '@' + str(myconst.calc_points)
+
 new_directory = destination + time_name + important_params
-genotype_directory = destination + time_name + important_params + '/pickles'
+pickle_directory = destination + time_name + important_params + '/pickles'
 
 best_genotype_list = []
 
 os.mkdir(new_directory)
-os.mkdir(genotype_directory)
-
+os.mkdir(pickle_directory)
 
 def genotype_writer(genotype):
-    filename = genotype_directory + '/'
+    filename = pickle_directory + '/'
 
     i = 0
     while True:
@@ -43,6 +41,8 @@ def genotype_writer(genotype):
             break
 
 def results_output(pop,runtime):
+
+    pop.individuals[0].chromosomes = gen.coil_order(copy.deepcopy(pop.individuals[0].chromosomes))
 
     filename1 = 'Output/' + time_name + important_params + '/o.txt'
 
@@ -88,12 +88,12 @@ def results_output(pop,runtime):
     filename4 = new_directory + '/chromloc.txt'
     np.savetxt(filename4, np.array([x['z'] for x in pop.individuals[0].chromosomes]), delimiter=',', fmt='%s')
 
-    g.waterfall_plot(new_directory, best_genotype_list)
+    graphical.waterfall_plot(new_directory, best_genotype_list)
 
 
 def analytics_output(genotype):
-    g.field_plot(new_directory, genotype)
+    graphical.field_plot(new_directory, genotype)
 
-    g.err_plot(new_directory, genotype)
+    graphical.err_plot(new_directory, genotype)
 
-    g.hist_plot(new_directory, genotype)
+    graphical.hist_plot(new_directory, genotype)

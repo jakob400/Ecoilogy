@@ -33,6 +33,7 @@ def evolver(myq, mypop, application_runtime):
             print("Successfully changed epsilon")
             epsilonFlag = False
 
+        ## Cycling the population through one evolutionary generation
         pop = gen.evolution_cycle(pop)
         if (counter > 0):
             last_difference = gen.last_difference_calc(pop.best_fitness)
@@ -45,15 +46,9 @@ def evolver(myq, mypop, application_runtime):
         print('Helmholtz fitness is:   ' + str(round(pop.individuals[0].hh_homogeneity,5)))
         print('Lee-Whiting fitness is: ' + str(round(pop.individuals[0].lw_homogeneity,5)))
 
-
-
-
         writer.genotype_writer(pop.individuals[0].genotype)
 
         counter += 1
-
-
-
 
     pprint(pop.individuals[0].genotype)
     application_end = timeit.default_timer()
