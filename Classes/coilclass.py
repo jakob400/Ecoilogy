@@ -1,9 +1,10 @@
 import random
 import numpy as np
-import myconstants as myconst
 
-import magnetix as mag
-import genetix as gen
+import Modules.myconstants as myconst
+import Modules.magnetix as mag
+import Modules.genetix as gen
+
 
 #TODO: Consider changing zlist to fitness_zlist, or field_zlist, for clarity
 

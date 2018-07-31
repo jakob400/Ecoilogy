@@ -1,11 +1,10 @@
-from coilclass import *
-
 import random
 import numpy as np
 from scipy import constants as const
-from scipy.optimize import curve_fit
 import copy
-import myconstants as myconst
+
+import Modules.myconstants as myconst
+from Classes.coilclass import *
 
 
 class Population:

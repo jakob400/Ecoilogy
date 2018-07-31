@@ -1,4 +1,5 @@
-import myconstants as myconst
+import Modules.myconstants as myconst
+import Analysis.graphical as g
 
 import numpy as np
 
@@ -12,11 +13,12 @@ import pickle
 now = datetime.datetime.now()
 
 destination = 'Output/'
-#time_name = now.strftime('%A%d') + 'BF:' + "{:.2E}".format(Decimal(pop.individuals[0].fitness))
 time_name = now.strftime('%A%d.%X')
 important_params = '@' + str(myconst.calc_points)
 new_directory = destination + time_name + important_params
-genotype_directory = 'Output/' + time_name + important_params + '/pickles'
+genotype_directory = destination + time_name + important_params + '/pickles'
+
+best_genotype_list = []
 
 os.mkdir(new_directory)
 os.mkdir(genotype_directory)
@@ -31,9 +33,10 @@ def genotype_writer(genotype):
         if (os.path.exists(write_filename)):
             i += 1
         if not (os.path.exists(write_filename)):
-            #np.savetxt(write_filename, np.array(genotype), delimiter=',', fmt='%s')
             f = open(write_filename, "wb")
             pickle.dump(genotype, f)
+            best_genotype_list.append(genotype)
+
             f.close()
             break
 
@@ -78,14 +81,19 @@ def results_output(pop,runtime):
 
 
 
-    filename2 = 'Output/' + time_name + important_params + '/chrom.txt'
-    #f = open(filename2, "w")
-    #f.write(str(pop.individuals[0].chromosomes))
+    filename2 = new_directory + '/chrom.txt'
     np.savetxt(filename2, np.array(pop.individuals[0].chromosomes), delimiter=',', fmt='%s')
 
-
-    filename3 = 'Output/' + time_name + important_params + '/generations.txt'
+    filename3 = new_directory + '/generations.txt'
     np.savetxt(filename3, pop.best_fitness, delimiter=',')
 
-    filename4 = 'Output/' + time_name + important_params + '/chromloc.txt'
+    filename4 = new_directory + '/chromloc.txt'
     np.savetxt(filename4, np.array([x['z'] for x in pop.individuals[0].chromosomes]), delimiter=',', fmt='%s')
+
+    g.field_plot(new_directory, pop.individuals[0].genotype)
+
+    g.field_plot(new_directory, pop.individuals[0].genotype)
+
+    g.hist_plot(new_directory, pop.individuals[0].genotype)
+
+    g.waterfall_plot(new_directory, best_genotype_list)

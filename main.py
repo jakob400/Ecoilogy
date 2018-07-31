@@ -1,9 +1,12 @@
-import myconstants as myconst
-from populationclass import *
-from writer import *
 import timeit
 
-import genetix as gen
+import Modules.myconstants as myconst
+import Modules.magnetix as mag
+import Modules.genetix as gen
+import Modules.writer as writer
+
+from Classes.populationclass import *
+
 
 from pprint import pprint
 import time
@@ -14,14 +17,17 @@ mainLoopFlag = True
 epsilonFlag = False
 Option = ''
 
+mypop = None
+application_runtime = None
+
 
 if True:
     os.system('cls' if os.name == 'nt' else 'clear')
     os.system('cls' if os.name == 'nt' else 'clear')
     print(' =========================================== ')
-    print('|-|   Ecoilogy: Version 1.0.3             |-|')
+    print('|-|   Ecoilogy: Version 1.1.0             |-|')
     print('|-|   Author: J Weirathmueller            |-|')
-    print('|-|   Last Updated: July 30, 2018         |-|')
+    print('|-|   Last Updated: July 31, 2018         |-|')
     print(' =========================================== \n\n')
     input('Press any button to begin...')
 
@@ -34,6 +40,10 @@ if True:
 ## TODO: don't mutate AFTER children have been combined with parents, do it to new species only
 
 def evolver():
+    global mypop
+    global application_runtime
+
+
     application_start = timeit.default_timer()
 
     pop = Population()
@@ -99,7 +109,8 @@ def evolver():
     pprint(pop.individuals[0].genotype)
     application_end = timeit.default_timer()
     application_runtime = application_end - application_start
-    results_output(copy.deepcopy(pop),application_runtime)
+    #results_output(copy.deepcopy(pop),application_runtime)
+    mypop = copy.deepcopy(pop)
 
 
 def get_input():
@@ -113,12 +124,22 @@ def get_input():
         if (keystrk == 'q'):
             print('You pressed \'q\'... Quitting')
             mainLoopFlag= False
+            break
         if (keystrk == 'z'):
             print('You pressed \'z\'... Changing z_epsilon')
             epsilonFlag = True
 
+# Defining threads:
 mainfoo = threading.Thread(target=evolver)
 controlfoo = threading.Thread(target=get_input)
 
+## Launching threads:
 mainfoo.start()
 controlfoo.start()
+
+## Waiting for threads to terminate:
+mainfoo.join()
+controlfoo.join()
+
+
+writer.results_output(mypop, application_runtime)
