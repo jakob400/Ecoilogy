@@ -9,6 +9,8 @@ import datetime
 from decimal import Decimal
 import pickle
 
+#TODO: Clean this up
+
 
 now = datetime.datetime.now()
 
@@ -77,10 +79,6 @@ def results_output(pop,runtime):
 
     f.close()
 
-
-
-
-
     filename2 = new_directory + '/chrom.txt'
     np.savetxt(filename2, np.array(pop.individuals[0].chromosomes), delimiter=',', fmt='%s')
 
@@ -90,10 +88,12 @@ def results_output(pop,runtime):
     filename4 = new_directory + '/chromloc.txt'
     np.savetxt(filename4, np.array([x['z'] for x in pop.individuals[0].chromosomes]), delimiter=',', fmt='%s')
 
-    g.field_plot(new_directory, pop.individuals[0].genotype)
-
-    g.err_plot(new_directory, pop.individuals[0].genotype)
-
-    g.hist_plot(new_directory, pop.individuals[0].genotype)
-
     g.waterfall_plot(new_directory, best_genotype_list)
+
+
+def analytics_output(genotype):
+    g.field_plot(new_directory, genotype)
+
+    g.err_plot(new_directory, genotype)
+
+    g.hist_plot(new_directory, genotype)
