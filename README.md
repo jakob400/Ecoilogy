@@ -1,5 +1,5 @@
 # Ecoilogy
-
+---
 A genetic algorithm (GA) designed to optimize coil design according to axial field homogeneity.
 
 
