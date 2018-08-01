@@ -96,4 +96,6 @@ def analytics_output(genotype):
 
     graphical.err_plot(new_directory, genotype)
 
+    graphical.err_zoom_plot(new_directory, genotype)
+
     graphical.hist_plot(new_directory, genotype)

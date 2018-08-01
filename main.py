@@ -6,12 +6,12 @@ import Modules.writer as writer
 if True:
     os.system('cls' if os.name == 'nt' else 'clear')
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(' =========================================== ')
-    print('|-|   Ecoilogy: Version 1.2.2             |-|')
-    print('|-|   Author: J Weirathmueller            |-|')
-    print('|-|   Last Updated: July 31, 2018         |-|')
-    print(' =========================================== \n\n')
-    input('Press any button to begin...')
+    print(' ========================================= ')
+    print('|-|     Ecoilogy: Version 1.2.3         |-|')
+    print('|-|     Author: J Weirathmueller        |-|')
+    print('|-|     Last Updated: August 1, 2018    |-|')
+    print(' ========================================= \n\n')
+    input('Press <ENTER> to begin... ')
 
 
 ## TODO: Vectorize Population() methods
@@ -20,6 +20,8 @@ if True:
 ## TODO: Check how taxing sorting of chromosomes is.
 ## TODO: Check FIXME's
 ## TODO: don't mutate AFTER children have been combined with parents, do it to new species only
+## TODO: To make o.txt more reliable, maybe don't take from myconst, but instead take from pop.indivuduals[0] attributes
+## TODO: Fix order in which information is displayed in threads.py. This may not be exactly representative of the actual last generation's attributes.
 
 mypop, application_runtime = control.launcher()
 

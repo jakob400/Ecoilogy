@@ -327,3 +327,28 @@ def last_difference_calc(best_fitness_list):
             break
 
     return last_difference
+
+
+def epsilonCalc(last_difference, generation):
+    """
+    Calculates what epsilon should be based on how long ago the last evolutionary advancement was.
+
+    Input: Last evolutionary advancement (int)
+    Output: New Epsilon (float)
+    """
+    x       = last_difference
+    y       = generation
+    power   = 1 / 10
+    scale   = 0.5
+    factor  = 10
+    R       = x + 0.1 * y  # last_difference should make more of an impact than generation
+
+    newEpsilon  = math.exp( math.log(scale) - power * (R + math.exp(-R)) )
+
+    # exponent    = math.exp(5 * (x + 0.1 * y))
+    # denominator = math.pow(1 + exponent, power)
+    # numerator   = 0.5
+    #
+    # newEpsilon = numerator / denominator
+
+    return newEpsilon
