@@ -1,11 +1,12 @@
 # Plotting Mode
 GRAPHICAL = False
 
-# Mutation Method:
-PILEUP = False
-REFLECTION = True # Broken
-REDRAW = False
-SPREADOUT = False # Broken
+# Mutation Methods:
+# 1. 'PILEUP'
+# 2. 'REFLECTION'
+# 3. 'REDRAW'
+# 4. 'SPREADOUT' = False # Broken
+MutationScheme = 'REFLECTION'
 
 # Breeding Method:
 RANDOM = True # FIXME: Currently broken method
@@ -27,7 +28,7 @@ I_epsilon = 0.0
 
 # Defining range of homogeneity calculation
 calc_z_min = 0
-calc_z_max = 0.5
+calc_z_max = 0.15
 calc_points = 10
 
 init_fitness = 0

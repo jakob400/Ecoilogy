@@ -111,6 +111,7 @@ def sol_ChromGen(total_loops, loop_z_max):
     Input: Number of total loops, maximum loop position.
     Output: Solenoid chromosomes.
     """
+    ## TODO: Make clearer
 
     # Relevant assignments:
     N                  = total_loops
@@ -320,7 +321,9 @@ def last_difference_calc(best_fitness_list):
     #TODO: Ask dave if there is a better way to do this
     last_difference = 0
 
-    for i in range(1, len(best_fitness_list) + 1):
+    # TODO: FIXME
+    # for i in range(1, len(best_fitness_list) + 1):
+    for i in range(1, len(best_fitness_list)):
         if (best_fitness_list[-i] == best_fitness_list[-i-1]):
             last_difference += 1
         else:
@@ -331,7 +334,7 @@ def last_difference_calc(best_fitness_list):
 
 def epsilonCalc(last_difference, generation):
     """
-    Calculates what epsilon should be based on how long ago the last evolutionary advancement was.
+    Calculates what epsilon should be based on how long ago the last evolutionary advancement was. Essentially a metric of health of population. Amount is inversely proportional to population stagnation.
 
     Input: Last evolutionary advancement (int)
     Output: New Epsilon (float)
@@ -341,9 +344,9 @@ def epsilonCalc(last_difference, generation):
     power   = 1 / 10
     scale   = 0.5
     factor  = 10
-    R       = x + 0.1 * y  # last_difference should make more of an impact than generation
+    R       = 5 * x + 0.1 * y  # last_difference should make more of an impact than generation
 
-    newEpsilon  = math.exp( math.log(scale) - power * (R + math.exp(-R)) )
+    newEpsilon  = math.exp( math.log(scale) - power * (R + math.log(factor + math.exp(-R)))  )
 
     # exponent    = math.exp(5 * (x + 0.1 * y))
     # denominator = math.pow(1 + exponent, power)

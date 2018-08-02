@@ -5,6 +5,8 @@ import Modules.myconstants as myconst
 import matplotlib.pyplot as plt
 import numpy as np
 
+from Classes.populationclass import *
+
 # Setting range of graphing:
 show_points_number  = 1000 # Number of points on +ve z axis (double this to get total)
 show_points         = np.linspace(0,1.0, show_points_number)
@@ -36,24 +38,33 @@ def waterfall_plot(address, history):
 
 def field_plot(address, genotype):
     loop_number = len(genotype)
+    loop_z_max = genotype[-1]['z']
 
     ext_genotype = genotype
+    init_genotype= Population.initial_best.genotype
     lw_genotype  = gen.chrom2geno(gen.lw_ChromGen(loop_number,radius=radius))
     hh_genotype  = gen.chrom2geno(gen.hh_ChromGen(loop_number,radius=radius))
+    sol_genotype = gen.chrom2geno(gen.sol_ChromGen(loop_number,loop_z_max=loop_z_max))
 
+    init_field  = mag.field_along_axis(init_genotype,show_points, a=radius)
     ext_field   = mag.field_along_axis(ext_genotype, show_points, a=radius)
     lw_field    = mag.field_along_axis(lw_genotype, show_points, a=radius)
     hh_field    = mag.field_along_axis(hh_genotype, show_points, a=radius)
+    sol_field   = mag.field_along_axis(sol_genotype, show_points, a=radius)
 
     ext_y = ext_field[:,1]
     lw_y = lw_field[:,1]
     hh_y = hh_field[:,1]
+    sol_y = sol_field[:,1]
+    init_y = init_field[:,1]
 
     x = lw_field[:,0]
 
     plt.plot(x, lw_y, label='Lee-Whiting' )
     plt.plot(x, hh_y, label='Helmholtz')
     plt.plot(x, ext_y, label='External')
+    plt.plot(x, sol_y, label='Solenoid')
+    plt.plot(x, init_y, label = 'Initial')
 
     plt.title('Magnetic Field Strengths of Competing Coils')
     plt.xlabel('z [m]')
@@ -72,24 +83,33 @@ def field_plot(address, genotype):
 def err_plot(address, genotype):
 
     loop_number = len(genotype)
+    loop_z_max = genotype[-1]['z']
 
     ext_genotype = genotype
+    init_genotype= Population.initial_best.genotype
     lw_genotype  = gen.chrom2geno(gen.lw_ChromGen(loop_number,radius=radius))
     hh_genotype  = gen.chrom2geno(gen.hh_ChromGen(loop_number,radius=radius))
+    sol_genotype = gen.chrom2geno(gen.sol_ChromGen(loop_number,loop_z_max=loop_z_max))
 
+    init_error= mag.ppm_field(init_genotype, show_points, a=radius)
     lw_error  = mag.ppm_field(lw_genotype, show_points, a=radius)
     hh_error  = mag.ppm_field(hh_genotype, show_points, a=radius)
     ext_error = mag.ppm_field(ext_genotype, show_points, a=radius)
+    sol_error = mag.ppm_field(sol_genotype, show_points, a=radius)
 
     lw_y = lw_error[:,1]
     hh_y = hh_error[:,1]
     ext_y = ext_error[:,1]
+    sol_y = sol_error[:,1]
+    init_y = init_error[:,1]
 
     x = lw_error[:,0]
 
     plt.plot(x, lw_y, label='Lee-Whiting' )
     plt.plot(x, hh_y, label='Helmholtz')
     plt.plot(x, ext_y, label='External')
+    plt.plot(x, sol_y, label='Solenoid')
+    plt.plot(x, init_y, label = 'Initial')
 
     plt.title('PPM Error Fields of Competing Coils')
     plt.xlabel('z [m]')
@@ -109,27 +129,37 @@ def err_plot(address, genotype):
 def err_zoom_plot(address, genotype):
 
     loop_number = len(genotype)
+    loop_z_max = genotype[-1]['z']
 
     ext_genotype = genotype
+    init_genotype= Population.initial_best.genotype
     lw_genotype  = gen.chrom2geno(gen.lw_ChromGen(loop_number,radius=radius))
     hh_genotype  = gen.chrom2geno(gen.hh_ChromGen(loop_number,radius=radius))
+    sol_genotype = gen.chrom2geno(gen.sol_ChromGen(loop_number,loop_z_max=loop_z_max))
 
+    init_error= mag.ppm_field(init_genotype, show_points, a=radius)
     lw_error  = mag.ppm_field(lw_genotype, show_points, a=radius)
     hh_error  = mag.ppm_field(hh_genotype, show_points, a=radius)
     ext_error = mag.ppm_field(ext_genotype, show_points, a=radius)
+    sol_error = mag.ppm_field(sol_genotype, show_points, a=radius)
 
+    init_y= init_error[:,1]
     lw_y = lw_error[:,1]
     hh_y = hh_error[:,1]
     ext_y = ext_error[:,1]
+    sol_y = sol_error[:,1]
 
     y_max = max(ext_y)
     x_max = 0.6
 
     x = lw_error[:,0]
 
+
     plt.plot(x, lw_y, label='Lee-Whiting' )
     plt.plot(x, hh_y, label='Helmholtz')
     plt.plot(x, ext_y, label='External')
+    plt.plot(x, sol_y, label='Solenoid')
+    plt.plot(x, init_y, label = 'Initial')
 
     plt.ylim(-y_max, y_max)
     plt.xlim(-x_max, x_max)
@@ -156,7 +186,7 @@ def hist_plot(address, genotype):
     filename = address + '/hist.png'
     positions = [c['z'] for c in genotype]
 
-    plt.hist(positions, bins=int(loop_number/2))
+    plt.hist(positions, bins=int(loop_number))
     plt.xlabel('z [m]')
     plt.ylabel('Turns')
     plt.title('Histogram of Loop Positions')

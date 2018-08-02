@@ -24,12 +24,16 @@ class Population:
     children = []
     epsilon_list = []
 
+    initial_best = None
+
 
 
     def __init__(self):
         """Population initialization. Creates random set of coils."""
 
         self.individuals = self.order(copy.deepcopy([Coil() for _ in range(self.population_number)]))
+
+        Population.initial_best = self.individuals[0]
 
 
     def order(self, to_sort):
@@ -113,6 +117,9 @@ class Population:
     def update_epsilon(self, newEpsilon):
         Coil.epsilon = newEpsilon
 
+    def update_z_max(self, newZ_max):
+        # TODO: FINISH Me
+        Coil.z_max = newZ_max
 
     def population_update(self):
         """Updates population."""

@@ -1,4 +1,6 @@
 # Ignore all depecrated files:
 FitnessAnalysis.py
 WaterfallPlot.py
+
+# Ignore all folders:
 */

@@ -54,15 +54,11 @@ def results_output(pop,runtime):
     f.write('Final best fitness               =       '+ str(pop.individuals[0].fitness)+'\n')
     f.write('RUNTIME                          =       '+ str(runtime) + '\n\n\n')
 
-    f.write('PILEUP                           =       '+ str(myconst.PILEUP) + '\n')
-    f.write('REFLECTION                       =       '+ str(myconst.REFLECTION) + '\n')
-    f.write('REDRAW                           =       '+ str(myconst.REDRAW) + '\n')
-    f.write('SPREADOUT                        =       '+ str(myconst.SPREADOUT) + '\n')
+    f.write('Mutation Scheme                  =       '+ str(myconst.MutationScheme) + '\n')
     f.write('loop_number                      =       '+ str(myconst.loop_number) + '\n')
     f.write('z_min                            =       '+ str(myconst.z_min) + '\n')
     f.write('z_max                            =       '+ str(myconst.z_max) + '\n')
     f.write('radius                           =       '+ str(myconst.radius) + '\n')
-
 
     f.write('calc_z_min                       =       '+ str(myconst.calc_z_min) + '\n')
     f.write('calc_z_max                       =       '+ str(myconst.calc_z_max) + '\n')
