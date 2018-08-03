@@ -294,23 +294,6 @@ def redrawCorrect(mutated_positions, mutated_currents, loop_z_min, loop_z_max, c
 
     return corrected_chromosomes
 
-def evolution_cycle(pop):
-    """
-    Performs cycle operation on population to advance generation.
-
-    Input: Population instance.
-    Output: Population instance.
-    """
-
-    pop.individuals = pop.order(pop.individuals)
-    pop.parents_update()
-    pop.children_update()
-    pop.mutate()
-    pop.population_update()
-    pop.best_fitness_append()
-
-    return pop
-
 def last_difference_calc(best_fitness_list):
     """
     Calculates how many generations have passed since the last change.
@@ -344,7 +327,7 @@ def epsilonCalc(last_difference, generation):
     power   = 1 / 10
     scale   = 0.5
     factor  = 10
-    R       = 5 * x + 0.1 * y  # last_difference should make more of an impact than generation
+    R       = 5 * x + .05 * y  # last_difference should make more of an impact than generation
 
     newEpsilon  = math.exp( math.log(scale) - power * (R + math.log(factor + math.exp(-R)))  )
 

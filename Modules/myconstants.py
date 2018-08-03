@@ -28,7 +28,7 @@ I_epsilon = 0.0
 
 # Defining range of homogeneity calculation
 calc_z_min = 0
-calc_z_max = 0.15
+calc_z_max = 0.25
 calc_points = 10
 
 init_fitness = 0

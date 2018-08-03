@@ -31,17 +31,34 @@ class Population:
     def __init__(self):
         """Population initialization. Creates random set of coils."""
 
-        self.individuals = self.order(copy.deepcopy([Coil() for _ in range(self.population_number)]))
+        self.individuals = copy.deepcopy([Coil() for _ in range(self.population_number)])
+        self.order()
 
         Population.initial_best = self.individuals[0]
 
+    def evolution_cycle(self):
+        """
+        Performs cycle operation on population to advance generation.
 
-    def order(self, to_sort):
+        Input: Population instance.
+        Output: Population instance.
+        """
+        #TODO: Move this to populationclass
+
+        self.order()
+        self.parents_update()
+        self.children_update()
+        self.mutate()
+        self.population_update()
+        self.best_fitness_append()
+
+        return
+
+
+    def order(self):
         """Orders all individuals in the population according to fitness. (High to low.)"""
 
-        to_sort.sort(key=lambda x: x.fitness, reverse=True)
-
-        return to_sort
+        self.individuals.sort(key=lambda x: x.fitness, reverse=True)
 
 
     def best_fitness_append(self):
@@ -98,7 +115,8 @@ class Population:
         for i in range(remainder):
             children.append(crossover(parents[father_IDs[i]], parents[mother_IDs[i]], i)) ##FIXME: Change from append
 
-        self.children = self.order(copy.deepcopy(children)) #+ self.parents
+        #self.children = self.order(copy.deepcopy(children)) #+ self.parents
+        self.children = copy.deepcopy(children)
 
 
     def mutate(self):
@@ -126,14 +144,16 @@ class Population:
 
 
 
-        self.individuals = self.order(copy.deepcopy(self.parents + self.children))
+        self.individuals = copy.deepcopy(self.parents + self.children)
+        self.order()
 
 
         # FIXME: This is a temporary fix. Find out why fitness is not being upated in the way you think it is.
         [c.genotype_update() for c in self.individuals]
         [c.field_update() for c in self.individuals]
         [c.fitness_update() for c in self.individuals]
-        self.individuals = self.order(copy.deepcopy(self.individuals))
+        self.individuals = copy.deepcopy(self.individuals)
+        self.order()
 
 
     def crossover(self, father, mother, i):

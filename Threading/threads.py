@@ -35,7 +35,7 @@ def evolver(queueop, mypop, application_runtime):
     while mainLoopFlag:
 
         # Cycling the population through one evolutionary generation
-        pop = gen.evolution_cycle(pop)
+        pop.evolution_cycle()
         if (len(pop.best_fitness) > 1):
             last_difference = gen.last_difference_calc(pop.best_fitness)
         generation += 1
@@ -57,9 +57,9 @@ def evolver(queueop, mypop, application_runtime):
 
         writer.genotype_writer(pop.individuals[0].genotype)
 
-        if(Coil.epsilon < 1e-5):
+        if(Coil.epsilon < 1e-7):
             mainLoopFlag = False
-            pass
+            break
 
 
     application_end = timeit.default_timer()
