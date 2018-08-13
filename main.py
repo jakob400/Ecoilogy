@@ -12,7 +12,7 @@ if True:
     os.system('cls' if os.name == 'nt' else 'clear')
     os.system('cls' if os.name == 'nt' else 'clear')
     print(' ========================================= ')
-    print('|-|     Ecoilogy: Version 1.4.0         |-|')
+    print('|-|     Ecoilogy: Version 1.4.1         |-|')
     print('|-|     Author: J Weirathmueller        |-|')
     print('|-|     Last Updated: August 1, 2018    |-|')
     print(' ========================================= \n\n')
