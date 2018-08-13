@@ -6,6 +6,11 @@ import Threading.threads as mythreads # Initializes global flags
 #TODO: Implement pool for threads.
 
 def launcher():
+
+    # import tkinter as tk
+    # root = tk.Tk()
+    # root.mainloop()
+
     queueop = queue.Queue()
     ## Main run variables:
     mypop               = None

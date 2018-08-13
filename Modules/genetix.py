@@ -259,7 +259,7 @@ def reflectCorrect(mutated_positions, mutated_currents, loop_z_min, loop_z_max, 
     corrected_below_currents = 2 * z_min * Bool_bad_below_currents - bad_below_currents
 
     ## Combining to correct
-    corrected_positions = corrected_above_positions + corrected_below_positions + good_initial_positions # Combining to correct
+    corrected_positions = corrected_above_positions + corrected_below_positions + good_initial_positions
     corrected_currents  = corrected_above_currents  + corrected_below_currents  + good_initial_currents
 
     corrected_chromosomes   = [ {'z' : pos, 'I' : cur} for pos,cur in zip(corrected_positions, corrected_currents) ]
@@ -317,7 +317,7 @@ def last_difference_calc(best_fitness_list):
 
 def epsilonCalc(last_difference, generation):
     """
-    Calculates what epsilon should be based on how long ago the last evolutionary advancement was. Essentially a metric of health of population. Amount is inversely proportional to population stagnation.
+    Calculates what epsilon should be based on how long ago the last evolutionary advancement was. Essentially a metric of health of population. Amount is (roughly) inversely proportional to population stagnation.
 
     Input: Last evolutionary advancement (int)
     Output: New Epsilon (float)
@@ -330,11 +330,5 @@ def epsilonCalc(last_difference, generation):
     R       = 5 * x + .05 * y  # last_difference should make more of an impact than generation
 
     newEpsilon  = math.exp( math.log(scale) - power * (R + math.log(factor + math.exp(-R)))  )
-
-    # exponent    = math.exp(5 * (x + 0.1 * y))
-    # denominator = math.pow(1 + exponent, power)
-    # numerator   = 0.5
-    #
-    # newEpsilon = numerator / denominator
 
     return newEpsilon

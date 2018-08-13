@@ -1,17 +1,19 @@
 import numpy as np
 from scipy import constants as const
 
+import Modules.myconstants as myconst
+
 #TODO: incorporate radii into genotype
 
-def __loop_field(transformed_genotype, a):
+def __loop_field(genotype, z0, a):
     """
     The exact B-field due to loop of wire at point z0 along axis.
 
     Input: Transformed genotype of coil, radius of loops (a).
     Output: B-field array of all contributions in [uT].
-
-    Note: Must transform z-positions relative to z0 before supplying genotype.
     """
+
+    transformed_genotype = __genotype_transform(genotype, z0)
 
     z = np.array([c['z'] for c in transformed_genotype])
     I = np.array([c['I'] for c in transformed_genotype])
@@ -34,6 +36,26 @@ def __genotype_transform(genotype, z0):
     transformed_genotype = [{'I' : c['I'], 'z' : z0 - c['z']} for c in genotype]
 
     return transformed_genotype
+
+def __spline_walk_homogeneity(genotype, div_width, radius):
+
+    walk_limit      = myconst.walk_limit
+    centre_field    = magnetic_field(genotype, 0, radius)
+    normalization   = centre_field ** 2
+
+    z = 0
+    while True:
+        B_at_z  = sum(__loop_field(genotype, z, radius))
+        # percent = ((B_at_z - centre_field) ** 2) / normalization
+        percent = abs( (B_at_z - centre_field) / centre_field )
+        ppm     = percent * 1e6
+        if (ppm > walk_limit):
+            break
+        z += div_width
+
+    return z
+
+
 
 
 def __erf_homogeneity(genotype, hom_points, a):
@@ -65,8 +87,8 @@ def magnetic_field(genotype, z0, a):
     Output: Scalar magnetic field at z0 in [uT]
     """
 
-    transformed_genotype = __genotype_transform(genotype, z0)
-    field_array          = __loop_field(transformed_genotype, a) # [uT]
+    # transformed_genotype = __genotype_transform(genotype, z0)
+    field_array          = __loop_field(genotype, z0, a) # [uT]
     field_amt            = sum(field_array)
 
     return field_amt # [uT]
@@ -142,6 +164,9 @@ def fitness_function(genotype, hom_points, a):
     Output: Fitness according to given fitness function.
     """
 
-    fitness = __erf_homogeneity(genotype, hom_points, a)
+    div_width = myconst.div_width
+
+    # fitness = __erf_homogeneity(genotype, hom_points, a)
+    fitness = __spline_walk_homogeneity(genotype, div_width, radius = a)
 
     return fitness

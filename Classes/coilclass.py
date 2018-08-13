@@ -5,7 +5,6 @@ import Modules.myconstants as myconst
 import Modules.magnetix as mag
 import Modules.genetix as gen
 
-
 #TODO: Consider changing zlist to fitness_zlist, or field_zlist, for clarity
 
 class Coil:
@@ -42,6 +41,10 @@ class Coil:
     calc_z_max  = myconst.calc_z_max
     calc_points = myconst.calc_points
     zlist       = np.linspace(calc_z_min,calc_z_max,calc_points) # Calculation points
+    field_points= zlist
+
+    walk_limit  = myconst.walk_limit
+    div_width   = myconst.div_width
 
     ## Initial values
     loop_number     = myconst.loop_number
@@ -50,17 +53,20 @@ class Coil:
     I_epsilon       = myconst.I_epsilon
 
     ## Standards:
-    sol_genotype    = []
-    sol_chromosomes = []
-    sol_homogeneity = 0
+    # Building Solenoid:
+    sol_chromosomes = np.array(gen.sol_ChromGen(loop_number, z_max))
+    sol_genotype    = np.array(gen.chrom2geno(sol_chromosomes))
+    sol_homogeneity = mag.fitness_function(sol_genotype, field_points, radius)
 
-    hh_genotype     = []
-    hh_chromosomes  = []
-    hh_homogeneity  = 0
+    # Building Lee-Whiting
+    lw_chromosomes = np.array(gen.lw_ChromGen(loop_number, radius))
+    lw_genotype    = np.array(gen.chrom2geno(lw_chromosomes))
+    lw_homogeneity = mag.fitness_function(lw_genotype, field_points, radius)
 
-    lw_genotype     = []
-    lw_chromosomes  = []
-    lw_homogeneity  = 0
+    # Building Helmholtz
+    hh_chromosomes = np.array(gen.hh_ChromGen(loop_number, radius))
+    hh_genotype    = np.array(gen.chrom2geno(hh_chromosomes))
+    hh_homogeneity = mag.fitness_function(hh_genotype, field_points, radius)
 
 
     def __init__(self):
@@ -71,17 +77,11 @@ class Coil:
         self.fitness_update()
         self.field_update()
 
-        self.hh_init()
-        self.lw_init()
-        self.sol_init()
-
-
 
     def manual_chromosomes_update(self, chromosomes):
         """Manually sets the chromosomes for an individual."""
 
         self.chromosomes = chromosomes
-
         self.genotype_update()
         self.fitness_update()
         self.field_update()
@@ -92,63 +92,27 @@ class Coil:
         Genotype initialization. Randomly chooses loop positions along z-axis.
         Positions act as individual chromosomes.
         """
-
-        # Importing class variables:
-        N       = Coil.loop_number
-        z_min   = Coil.z_min
-        z_max   = Coil.z_max
-        I_min   = Coil.I_min
-        I_max   = Coil.I_max
-
-        # Generating chromosomes:
-        chromosomes = gen.random_ChromGen(N, z_min, z_max, I_min, I_max)
-
-        # Class assignments:
-        self.chromosomes = chromosomes
+        self.chromosomes = gen.random_ChromGen(Coil.loop_number, Coil.z_min, Coil.z_max, Coil.I_min, Coil.I_max)
 
 
     def genotype_update(self):
         """
         Takes chromosomes and converts to genotype.
         """
-
-        # Importing class variable:
-        chromosomes     = self.chromosomes
-
-        # Converting to genotype:
-        genotype        = gen.chrom2geno(chromosomes)
-
-        # Instance assignment:
-        self.genotype = genotype
+        self.genotype = gen.chrom2geno(self.chromosomes)
 
 
     def fitness_update(self):
         """Updates fitness of self"""
-
-        # Importing class variables
-        zlist    = Coil.zlist
-        a        = Coil.radius
-
-        # Importing instance variables
-        genotype = self.genotype
-
-        # Calculating fitness:
-        self.fitness = mag.fitness_function(genotype, zlist, a)
+        self.fitness = mag.fitness_function(self.genotype, Coil.zlist, Coil.radius)
 
 
     def field_update(self):
         """Updates the fields along the axis."""
+        args = [self.genotype, Coil.zlist, Coil.radius]
 
-        # Importing class variables
-        zlist    = Coil.zlist
-        a        = Coil.radius
-
-        # Importing instance variables
-        genotype = self.genotype
-
-        # Calculating and assigning magnetics (instance):
-        self.field  = mag.field_along_axis(genotype, zlist, a)
-        self.ppm    = mag.ppm_field(genotype, zlist, a)
+        self.field  = mag.field_along_axis(*args)
+        self.ppm    = mag.ppm_field(*args)
 
 
     def mutate(self):
@@ -158,28 +122,18 @@ class Coil:
         Note: Currently mutates ALL chromosomes, maybe change later.
         FIXME: Mutation probability must be handled externally.
         """
+        mutated_positions, mutated_currents  = gen.chrom_mutate(self.chromosomes, Coil.epsilon, Coil.I_epsilon)
 
-        # Importing class variables
-        z_min       = Coil.z_min
-        z_max       = Coil.z_max
-        I_min       = Coil.I_min
-        I_max       = Coil.I_max
-        epsilon     = Coil.epsilon
-        I_epsilon   = Coil.I_epsilon
-
-        # Importing instance variables:
-        chromosomes = self.chromosomes
-
-        mutated_positions, mutated_currents  = gen.chrom_mutate(chromosomes, epsilon, I_epsilon)
+        args = [mutated_positions, mutated_currents, Coil.z_min, Coil.z_max, Coil.I_min, Coil.I_max]
 
         if (Coil.MutationScheme == 'PILEUP'):
-            mutated_chromosomes = gen.pileupCorrect(mutated_positions, mutated_currents, z_min, z_max, I_min, I_max)
+            mutated_chromosomes = gen.pileupCorrect(*args)
 
         elif(Coil.MutationScheme == 'REFLECTION'):
-            mutated_chromosomes = gen.reflectCorrect(mutated_positions, mutated_currents, z_min, z_max, I_min, I_max)
+            mutated_chromosomes = gen.reflectCorrect(*args)
 
         elif(Coil.MutationScheme == 'REDRAW'):
-            mutated_chromosomes = gen.redrawCorrect(mutated_positions, mutated_currents, z_min, z_max, I_min, I_max)
+            mutated_chromosomes = gen.redrawCorrect(*args)
 
         elif(Coil.MutationScheme == 'SPREADOUT'):
             pass
@@ -191,65 +145,3 @@ class Coil:
         # Assigning changes to instance:
         self.chromosomes = gen.coil_order(mutated_chromosomes)
         self.genotype_update()
-
-
-    def hh_init(self):
-        """
-        Calculates field due to Helmholtz coil with the same configuration.
-        """
-
-        # Importing class variables:
-        a               = Coil.radius
-        N               = Coil.loop_number # Total numer of loops available
-        field_points    = Coil.zlist
-
-        # Building genetics:
-        chromosomes = gen.hh_ChromGen(N, a)
-        genotype    = gen.chrom2geno(chromosomes)
-
-        # Class assignments:
-        Coil.hh_chromosomes = np.array(chromosomes)
-        Coil.hh_genotype    = np.array(genotype)
-        Coil.hh_homogeneity = mag.fitness_function(genotype, field_points, a)
-
-
-    def sol_init(self):
-        ## TODO: finish adding currents to chromosomes
-        """
-        Calculates field due to solenoid with the same configuration.
-        """
-
-        # Importing class variables:
-        loop_z_max      = Coil.z_max
-        N               = Coil.loop_number # Total numer of loops available
-        field_points    = Coil.zlist
-        a               = Coil.radius
-
-        # Building genetics:
-        chromosomes = gen.sol_ChromGen(N, loop_z_max)
-        genotype    = gen.chrom2geno(chromosomes)
-
-        # Class assignments:
-        Coil.sol_chromosomes = np.array(chromosomes)
-        Coil.sol_genotype    = np.array(genotype)
-        Coil.sol_homogeneity = mag.fitness_function(genotype, field_points, a)
-
-
-    def lw_init(self):
-        """
-        Builds Lee-Whiting genetics and calculates Lee-Whiting fitness.
-        """
-
-        # Importing class variables:
-        a               = Coil.radius
-        N               = Coil.loop_number # Total numer of loops available
-        field_points    = Coil.zlist
-
-        # Building genetics:
-        chromosomes = gen.lw_ChromGen(N, a)
-        genotype    = gen.chrom2geno(chromosomes)
-
-        # Class assignments:
-        Coil.lw_chromosomes = np.array(chromosomes)
-        Coil.lw_genotype    = np.array(genotype)
-        Coil.lw_homogeneity = mag.fitness_function(genotype, field_points, a)

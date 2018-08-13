@@ -43,7 +43,6 @@ class Population:
         Input: Population instance.
         Output: Population instance.
         """
-        #TODO: Move this to populationclass
 
         self.order()
         self.parents_update()
@@ -51,8 +50,6 @@ class Population:
         self.mutate()
         self.population_update()
         self.best_fitness_append()
-
-        return
 
 
     def order(self):
@@ -113,7 +110,8 @@ class Population:
         mothers = []
         children = []
         for i in range(remainder):
-            children.append(crossover(parents[father_IDs[i]], parents[mother_IDs[i]], i)) ##FIXME: Change from append
+            child = self.individuals[-(i+1)] # Picking from one of the unlucky, so a new instance of coil need not be created.
+            children.append(crossover(parents[father_IDs[i]], parents[mother_IDs[i]], child)) ##FIXME: Change from append
 
         #self.children = self.order(copy.deepcopy(children)) #+ self.parents
         self.children = copy.deepcopy(children)
@@ -125,7 +123,6 @@ class Population:
 
         m = self.mutation_probability
 
-        ## FIXME: try to vectorize
         for i in range(len(self.children)):
 
             if (random.uniform(0,1) < m):
@@ -142,11 +139,8 @@ class Population:
     def population_update(self):
         """Updates population."""
 
-
-
         self.individuals = copy.deepcopy(self.parents + self.children)
         self.order()
-
 
         # FIXME: This is a temporary fix. Find out why fitness is not being upated in the way you think it is.
         [c.genotype_update() for c in self.individuals]
@@ -156,40 +150,25 @@ class Population:
         self.order()
 
 
-    def crossover(self, father, mother, i):
+    def crossover(self, father, mother, child):
         """
         Performs random crossover between two individuals
 
         i: crossover number
         """
-        ## FIXME: This may not be the best way to do crossover. Consider non-random method.
-        ## FIXME: Ask Dave if this is the best implementation
-        ## FIXME: Ask Dave if better to pass in entire object or just the attribute
-        ## FIXME: Add child to population
 
-
-        child = self.individuals[-(i+1)] # Picking from one of the unlucky, so a new instance of coil need not be created.
         fchromosomes = np.array(father.chromosomes)
         mchromosomes = np.array(mother.chromosomes)
-
         chrom_number = len(fchromosomes)
 
         # Breeding Types
-        if (myconst.SPLIT == True):
-            chromosomes = np.hstack((fchromosomes[:int(chrom_number/2)],mchromosomes[int(chrom_number/2):]))
-        elif (myconst.RANDOM == True):
+
+        if (myconst.RANDOM == True):
             father_probabilities = np.random.choice([True,False], size = chrom_number, p=[0.5,0.5])
             mother_probabilities = (father_probabilities != True) # Complement
             fchromosomes = fchromosomes[father_probabilities]
             mchromosomes = mchromosomes[mother_probabilities]
             chromosomes = np.hstack((fchromosomes,mchromosomes))
-
-            #chromosomes = np.array(sorted(chromosomes, key=lambda k: k['z']))
-
-            #pprint(chromosomes)
-            #quit()
-
-            #chromosomes = fchromosomes * father_probabilities + mchromosomes * mother_probabilities
         else:
             print("SYSTEM ERROR: BREEDING TYPE INVALID")
             exit()

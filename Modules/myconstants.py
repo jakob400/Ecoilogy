@@ -6,7 +6,7 @@ GRAPHICAL = False
 # 2. 'REFLECTION'
 # 3. 'REDRAW'
 # 4. 'SPREADOUT' = False # Broken
-MutationScheme = 'REFLECTION'
+MutationScheme = 'REDRAW'
 
 # Breeding Method:
 RANDOM = True # FIXME: Currently broken method
@@ -39,10 +39,13 @@ population_number = 100
 
 parent_fraction = 0.1
 lucky_probability = 0.05
-mutation_probability = 0.1 # probability that a child will be mutated
+mutation_probability = 0.2#0.1 # probability that a child will be mutated
 
 max_fitness = 324300000
 
 
 B_ave_multiplier = 1#10
 fitness_multiplier = 1#e6
+
+walk_limit          = 10 # ppm
+div_width           = 0.001 # M
