@@ -3,7 +3,7 @@ import numpy as np
 import Analysis.graphical as g
 import Modules.genetix as gen
 
-address = 'Output/Wednesday01.16:47:07@10/'
+address = 'Output/Tuesday14.16:23:50@10/'
 
 def genotype_extractor():
     destination = address + 'chromloc.txt'

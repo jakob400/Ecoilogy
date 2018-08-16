@@ -6,7 +6,7 @@ GRAPHICAL = False
 # 2. 'REFLECTION'
 # 3. 'REDRAW'
 # 4. 'SPREADOUT' = False # Broken
-MutationScheme = 'REDRAW'
+MutationScheme = 'REFLECTION'
 
 # Breeding Method:
 RANDOM = True # FIXME: Currently broken method
@@ -16,8 +16,9 @@ SPLIT = False
 
 
 radius = 0.25
+wire_width = 3 # Number of decimals. 3  = 1 mm  (0.001m)
 
-loop_number = 100 # Keep this an even number #TOTAL number of loops
+loop_number = 378 # Keep this an even number #TOTAL number of loops
 z_min = 0
 z_max = 0.5
 epsilon = 0.1 # Distance of mutation
@@ -49,3 +50,5 @@ fitness_multiplier = 1#e6
 
 walk_limit          = 10 # ppm
 div_width           = 0.001 # M
+
+gap_precision = 0.1e-6

@@ -67,11 +67,10 @@ def __erf_homogeneity(genotype, hom_points, a):
     """
 
     centre_field    = magnetic_field(genotype, 0, a)
-    normalization   = centre_field ** 2
+    normalization   = centre_field ** 10
 
     field_array     = field_along_axis(genotype, hom_points, a)
-    variances       = (field_array[:,1] - centre_field) ** 2
-    std             = (field_array[:,1] - centre_field)
+    variances       = (field_array[:,1] - centre_field) ** 10
 
     erf             = sum([x for x in variances]) / normalization
     homogeneity     = (1 / erf)

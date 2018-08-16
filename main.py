@@ -12,7 +12,7 @@ if True:
     os.system('cls' if os.name == 'nt' else 'clear')
     os.system('cls' if os.name == 'nt' else 'clear')
     print(' ========================================= ')
-    print('|-|     Ecoilogy: Version 1.4.1         |-|')
+    print('|-|     Ecoilogy: Version 1.4.2         |-|')
     print('|-|     Author: J Weirathmueller        |-|')
     print('|-|     Last Updated: August 1, 2018    |-|')
     print(' ========================================= \n\n')
@@ -32,6 +32,11 @@ if True:
 ## TODO: Plot initial best coil along with others at very end
 ## TODO: Create scheduler
 ## TODO: Figure out why class wide changes actually work for epsilon... it shouldn't
+
+## TODO: Have wire thickness be input parameter - also dictates wires piling up (1mm is good start)
+## TODO: Pickle initial_best
+## TODO: Use eq. 3 in solenoid gap paper
+## TODO: Try old fitness function, but increase exponent to be harder on larger deviations
 
 
 

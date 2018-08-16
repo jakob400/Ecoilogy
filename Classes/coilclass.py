@@ -51,6 +51,8 @@ class Coil:
     radius          = myconst.radius
     epsilon         = myconst.epsilon
     I_epsilon       = myconst.I_epsilon
+    wire_width      = myconst.wire_width
+    gap_precision   = myconst.gap_precision
 
     ## Standards:
     # Building Solenoid:
@@ -58,15 +60,21 @@ class Coil:
     sol_genotype    = np.array(gen.chrom2geno(sol_chromosomes))
     sol_homogeneity = mag.fitness_function(sol_genotype, field_points, radius)
 
-    # Building Lee-Whiting
+    # Building Lee-Whiting:
     lw_chromosomes = np.array(gen.lw_ChromGen(loop_number, radius))
     lw_genotype    = np.array(gen.chrom2geno(lw_chromosomes))
     lw_homogeneity = mag.fitness_function(lw_genotype, field_points, radius)
 
-    # Building Helmholtz
+    # Building Helmholtz:
     hh_chromosomes = np.array(gen.hh_ChromGen(loop_number, radius))
     hh_genotype    = np.array(gen.chrom2geno(hh_chromosomes))
     hh_homogeneity = mag.fitness_function(hh_genotype, field_points, radius)
+
+    # Building Gapped Solenoid:
+    gap_chromosomes = np.array(gen.gap_ChromGen(radius, z_max, loop_number, gap_precision))
+    gap_genotype    = np.array(gen.chrom2geno(gap_chromosomes))
+    gap_homogeneity = mag.fitness_function(gap_genotype, field_points, radius)
+
 
 
     def __init__(self):
@@ -99,7 +107,8 @@ class Coil:
         """
         Takes chromosomes and converts to genotype.
         """
-        self.genotype = gen.chrom2geno(self.chromosomes)
+        self.chromosomes    = gen.chromRealisticize(self.chromosomes, Coil.wire_width)
+        self.genotype       = gen.chrom2geno(self.chromosomes)
 
 
     def fitness_update(self):

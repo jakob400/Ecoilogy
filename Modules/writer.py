@@ -84,6 +84,10 @@ def results_output(pop,runtime):
     filename4 = new_directory + '/chromloc.txt'
     np.savetxt(filename4, np.array([x['z'] for x in pop.individuals[0].chromosomes]), delimiter=',', fmt='%s')
 
+    import matplotlib.pyplot as plt
+    plt.hist(pop.initial_fitness_list, bins = 50)
+    plt.show()
+
     graphical.waterfall_plot(new_directory, best_genotype_list)
 
 

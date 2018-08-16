@@ -21,7 +21,6 @@ def evolver(queueop, mypop, application_runtime):
 
     #pop.individuals[0].genotype_update()
 
-
     generation = 0
     last_wait = 0
     last_difference = 0
@@ -44,14 +43,15 @@ def evolver(queueop, mypop, application_runtime):
 
         # pprint(gen.coil_order(pop.individuals[0].chromosomes))
 
-        print('Current Generation is    : ', generation)
-        print('Last difference was      : ', last_difference)
-        print('Epsilon is               : ' + str(Coil.epsilon))
-        print('Best Fitness is          : ' + str(round(pop.best_fitness[-1],5)))
-        print('Initial best fitness is  : ' + str(round(Population.initial_best.fitness, 5)))
-        print('Helmholtz fitness is     : ' + str(round(pop.individuals[0].hh_homogeneity,5)))
-        print('Lee-Whiting fitness is   : ' + str(round(pop.individuals[0].lw_homogeneity,5)))
-        print('Solenoid fitness is      : ' + str(round(pop.individuals[0].sol_homogeneity,5)))
+        print('Current Generation is        : ', generation)
+        print('Last difference was          : ', last_difference)
+        print('Epsilon is                   : ' + str(Coil.epsilon))
+        print('Initial best fitness is      : ' + str(round(Population.initial_best.fitness, 5)))
+        print('Best Fitness is              : ' + str(round(pop.best_fitness[-1],5)))
+        print('Helmholtz fitness is         : ' + str(round(pop.individuals[0].hh_homogeneity,5)))
+        print('Lee-Whiting fitness is       : ' + str(round(pop.individuals[0].lw_homogeneity,5)))
+        print('Solenoid fitness is          : ' + str(round(pop.individuals[0].sol_homogeneity,5)))
+        print('Gapped Solenoid fitness is   : ' + str(round(pop.individuals[0].gap_homogeneity,5)))
 
         print('\n')
 

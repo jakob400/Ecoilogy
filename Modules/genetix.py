@@ -56,6 +56,24 @@ def random_kGen(epsilon, shape):
     return k
 
 def lw_ChromGen(total_loops, radius):
+    # Relevant assignments:
+    b_1     = (0.243186) * radius # Distance of inner coils
+    b_2     = (0.940733) * radius # Distance of outer coils
+
+    #total_current = sum([x['I'] for x in genotype])
+    total_current = total_loops * 1
+    half_current  = total_current / 2
+    I_1           = half_current / (1 + 2.26044)
+    I_2           = half_current - I_1
+
+    chromosomes = [
+        {'z' : b_1, 'I' : I_1},
+        {'z' : b_2, 'I' : I_2}
+    ]
+
+    return chromosomes
+
+def lw_oldChromGen(total_loops, radius):
     """
     Generates (approximate) Lee-Whiting chromosomes according to number of loops allowed and radii of said loops.
 
@@ -129,6 +147,25 @@ def sol_ChromGen(total_loops, loop_z_max):
 
     return chromosomes
 
+def gap_ChromGen(radius, length, total_loops, precision):
+
+    X_m = gap_function(length / radius)
+    z = 0
+
+    while (z <= 0.5):
+        if(gap_function(z / radius) < X_m):
+            z += precision
+        else:
+            break
+    chrom_number = total_loops / 2
+    positions = np.linspace(z, length, chrom_number)
+    chromosomes = [{'z': position, 'I':1} for position in positions]
+
+    return chromosomes
+
+def gap_function(X):
+    return X * (1 + X ** 2) ** (-5/2)
+
 
 def coil_order(genetic_material):
     """
@@ -145,8 +182,8 @@ def coil_order(genetic_material):
 
 
 
-def population_order(pop):
-    return ordered_pop
+# def population_order(pop):
+#     return ordered_pop
 
 
 
@@ -208,7 +245,7 @@ def genReflectCorrectOperation(mutated_values, min_val, max_val):
     Output: Corrected values.
     """
 
-    currents    = np.array(mutated_currents)
+    values    = np.array(mutated_values)
 
     ## Converting values to Boolean equivalents:
     Bool_bad_above = (values > max_val).astype(int)
@@ -216,13 +253,13 @@ def genReflectCorrectOperation(mutated_values, min_val, max_val):
     Bool_good      = (Bool_bad_above == Bool_bad_below).astype(int)
 
     ## Getting back arrays with only the relevant parts as nonzero:
-    bad_above_positions     = Bool_bad_above * values # All values above threshold
-    bad_below_positions     = Bool_bad_below * values # All values below threshold
-    good_initial_positions  = Bool_good      * values # All values at or within thresholds
+    bad_above     = Bool_bad_above * values # All values above threshold
+    bad_below     = Bool_bad_below * values # All values below threshold
+    good_initial  = Bool_good      * values # All values at or within thresholds
 
     ## Formula: 2 * z_max - z_mut = z_cor
-    corrected_above_positions = 2 * max_val * Bool_bad_above - bad_above
-    corrected_below_positions = 2 * min_val * Bool_bad_below - bad_below
+    corrected_above = 2 * max_val * Bool_bad_above - bad_above
+    corrected_below = 2 * min_val * Bool_bad_below - bad_below
 
     ## Combining to correct
     corrected_values = corrected_above + corrected_below + good_initial
@@ -317,7 +354,7 @@ def epsilonCalc(last_difference, generation):
     Input: Last evolutionary advancement (int)
     Output: New Epsilon (float)
     """
-    
+
     x       = last_difference
     y       = generation
     power   = 1 / 10
@@ -328,3 +365,11 @@ def epsilonCalc(last_difference, generation):
     newEpsilon  = math.exp( math.log(scale) - power * (R + math.log(factor + math.exp(-R)))  )
 
     return newEpsilon
+
+def chromRealisticize(chromosomes, wire_width):
+    for chromosome in chromosomes:
+        chromosome['z'] = np.round(a=chromosome['z'], decimals=wire_width)
+
+    realistic_chromosomes = copy.deepcopy(chromosomes)
+
+    return realistic_chromosomes

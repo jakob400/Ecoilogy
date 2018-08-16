@@ -26,6 +26,8 @@ class Population:
 
     initial_best = None
 
+    initial_fitness_list = None
+
 
 
     def __init__(self):
@@ -35,6 +37,7 @@ class Population:
         self.order()
 
         Population.initial_best = self.individuals[0]
+        Population.initial_fitness_list = [c.fitness for c in self.individuals]
 
     def evolution_cycle(self):
         """
