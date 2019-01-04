@@ -13,8 +13,8 @@ import copy
 now = datetime.datetime.now()
 
 destination = 'Output/'
-time_name = now.strftime('%A%d.%X')
-important_params = '@' + str(myconst.calc_points)
+time_name = now.strftime('%A_%m.%d_%X')
+important_params = '@cp=' + str(myconst.calc_points)
 
 new_directory = destination + time_name + important_params
 pickle_directory = destination + time_name + important_params + '/pickles'
@@ -48,7 +48,7 @@ def results_output(pop,runtime):
 
     f = open(filename1, "w")
 
-    neat_date = now.strftime("%A %d. %B %Y")
+    neat_date = now.strftime("%A, %B %d %Y")
     f.write('Finished computation at ' + str(neat_date) +'.\n')
     f.write('Generations                      =       '+ str(len(pop.best_fitness)) + '\n')
     f.write('Final best fitness               =       '+ str(pop.individuals[0].fitness)+'\n')
@@ -58,7 +58,7 @@ def results_output(pop,runtime):
     f.write('loop_number                      =       '+ str(myconst.loop_number) + '\n')
     f.write('z_min                            =       '+ str(myconst.z_min) + '\n')
     f.write('z_max                            =       '+ str(myconst.z_max) + '\n')
-    f.write('radius                           =       '+ str(myconst.radius) + '\n')
+    f.write('radius                           =       '+ str(myconst.r_0) + '\n')
 
     f.write('calc_z_min                       =       '+ str(myconst.calc_z_min) + '\n')
     f.write('calc_z_max                       =       '+ str(myconst.calc_z_max) + '\n')
@@ -84,9 +84,9 @@ def results_output(pop,runtime):
     filename4 = new_directory + '/chromloc.txt'
     np.savetxt(filename4, np.array([x['z'] for x in pop.individuals[0].chromosomes]), delimiter=',', fmt='%s')
 
-    import matplotlib.pyplot as plt
-    plt.hist(pop.initial_fitness_list, bins = 50)
-    plt.show()
+    # import matplotlib.pyplot as plt
+    # plt.hist(pop.initial_fitness_list, bins = 50)
+    # plt.show()
 
     graphical.waterfall_plot(new_directory, best_genotype_list)
 

@@ -12,9 +12,9 @@ if True:
     os.system('cls' if os.name == 'nt' else 'clear')
     os.system('cls' if os.name == 'nt' else 'clear')
     print(' ========================================= ')
-    print('|-|     Ecoilogy: Version 1.4.2         |-|')
+    print('|-|     Ecoilogy: Version 2.0.0         |-|')
     print('|-|     Author: J Weirathmueller        |-|')
-    print('|-|     Last Updated: August 1, 2018    |-|')
+    print('|-|     Last Updated: January 4, 2019   |-|')
     print(' ========================================= \n\n')
     input('Press <ENTER> to begin... ')
 # import tkinter as tk
@@ -36,7 +36,10 @@ if True:
 ## TODO: Have wire thickness be input parameter - also dictates wires piling up (1mm is good start)
 ## TODO: Pickle initial_best
 ## TODO: Use eq. 3 in solenoid gap paper
+## TODO: Use same positions as normal solenoid, with centre cut out. Normalize remaining wires to have same total current
 ## TODO: Try old fitness function, but increase exponent to be harder on larger deviations
+## TODO: Add master file  for all the standards chromosomes
+## TODO: Figure out why 9/4 lee whiting looks the same as exact lee whiting
 
 
 
@@ -47,4 +50,4 @@ if True:
 mypop, application_runtime = control.launcher()
 
 writer.results_output(mypop, application_runtime)
-writer.analytics_output(mypop.individuals[0].genotype)
+#writer.analytics_output(mypop.individuals[0].genotype)

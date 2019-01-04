@@ -8,6 +8,20 @@ GRAPHICAL = False
 # 4. 'SPREADOUT' = False # Broken
 MutationScheme = 'REFLECTION'
 
+# Method for millable or not:
+# 1. Millable
+# 2. Analytic
+GenerationScheme = 'MILLABLE'
+
+# Realism Parameters:
+
+div_width           = 0.001 # M
+gap_precision       = 0.1e-6
+mill_precision      = 0.0001 #[m]
+wire_width          = 0.001 #[m]
+wall_width          = 0.0005 #[m]
+max_stack           = 3
+
 # Breeding Method:
 RANDOM = True # FIXME: Currently broken method
 SPLIT = False
@@ -15,17 +29,23 @@ SPLIT = False
 #TODO: Write conditional here to check if more than one breeding method or mutation method are active.
 
 
-radius = 0.25
-wire_width = 3 # Number of decimals. 3  = 1 mm  (0.001m)
 
-loop_number = 378 # Keep this an even number #TOTAL number of loops
+
+
+loop_number = 100#378 # Keep this an even number #TOTAL number of loops #CHANGMEBACK
 z_min = 0
 z_max = 0.5
 epsilon = 0.1 # Distance of mutation
 
 I_min = 1.0
 I_max = 1.0
-I_epsilon = 0.0
+I_epsilon = int(0.0)
+
+
+r_0         = 0.25 # Standard radius of coil (not wire)
+r_min       = r_0 - wire_width/2 # First radius
+r_max       = r_0 + wire_width/2 # Second radius
+r_epsilon   = int(0.0)
 
 # Defining range of homogeneity calculation
 calc_z_min = 0
@@ -48,7 +68,4 @@ max_fitness = 324300000
 B_ave_multiplier = 1#10
 fitness_multiplier = 1#e6
 
-walk_limit          = 10 # ppm
-div_width           = 0.001 # M
-
-gap_precision = 0.1e-6
+walk_limit          = 20 # ppm

@@ -2,6 +2,7 @@ import random
 import numpy as np
 from scipy import constants as const
 import copy
+import Modules.genetix as gen
 
 import Modules.myconstants as myconst
 from Classes.coilclass import *
@@ -27,6 +28,10 @@ class Population:
     initial_best = None
 
     initial_fitness_list = None
+
+    realistic_chromosomes   = None
+    realistic_genotype      = None
+    realistic_fitness       = None
 
 
 
@@ -58,6 +63,7 @@ class Population:
     def order(self):
         """Orders all individuals in the population according to fitness. (High to low.)"""
 
+        #print("Ordering population... \n")
         self.individuals.sort(key=lambda x: x.fitness, reverse=True)
 
 
@@ -73,6 +79,8 @@ class Population:
     def parents_update(self):
         """Updates list of parents and unfit."""
 
+
+        #print("Updating list of parents... \n")
         s = self.parent_fraction
         l = self.lucky_probability
 
@@ -98,6 +106,7 @@ class Population:
         ## NOTE: THIS IS THE SLOWEST LINK
 
 
+        #print("Updating list of children... \n")
         crossover = self.crossover
 
 
@@ -124,6 +133,7 @@ class Population:
         """Randomly mutates individuals in the children."""
 
 
+        #print("Mutating individuals in list of children... \n")
         m = self.mutation_probability
 
         for i in range(len(self.children)):
@@ -142,6 +152,7 @@ class Population:
     def population_update(self):
         """Updates population."""
 
+        #print("Updating population... \n")
         self.individuals = copy.deepcopy(self.parents + self.children)
         self.order()
 
@@ -180,3 +191,19 @@ class Population:
         child.manual_chromosomes_update(chromosomes)
 
         return child # Replacing poor performers
+
+    def bestRealisticize(self):
+
+        self.order() # Maybe unnecessary but I'm too lazy to check if it's redundant
+
+        chromosomes     = self.individuals[0].chromosomes
+
+        mill_precision  = myconst.mill_precision
+        wire_width      = myconst.wire_width
+        wall_width      = myconst.wall_width
+        max_stack       = myconst.max_stack
+        r_min           = myconst.r_min
+
+        self.realistic_chromosomes  = gen.chromRealisticize(chromosomes, mill_precision, wire_width, wall_width, max_stack, r_min)
+        self.realistic_genotype     = gen.chrom2geno(self.realistic_chromosomes)
+        self.realistic_fitness      = mag.fitness_function(self.realistic_genotype, None)

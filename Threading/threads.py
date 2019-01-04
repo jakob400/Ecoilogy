@@ -43,12 +43,15 @@ def evolver(queueop, mypop, application_runtime):
 
         # pprint(gen.coil_order(pop.individuals[0].chromosomes))
 
+
+        #TODO: Have parameter for fractional fitness. In other words, have best_fitness/best_accepted_fitness, where best_accepted_fitness is chosen from the best of the analytic solutions.
         print('Current Generation is        : ', generation)
         print('Last difference was          : ', last_difference)
         print('Epsilon is                   : ' + str(Coil.epsilon))
         print('Initial best fitness is      : ' + str(round(Population.initial_best.fitness, 5)))
         print('Best Fitness is              : ' + str(round(pop.best_fitness[-1],5)))
         print('Helmholtz fitness is         : ' + str(round(pop.individuals[0].hh_homogeneity,5)))
+        print('9/4 Lee-Whiting fitness is   : ' + str(round(pop.individuals[0].lwb_homogeneity,5)))
         print('Lee-Whiting fitness is       : ' + str(round(pop.individuals[0].lw_homogeneity,5)))
         print('Solenoid fitness is          : ' + str(round(pop.individuals[0].sol_homogeneity,5)))
         print('Gapped Solenoid fitness is   : ' + str(round(pop.individuals[0].gap_homogeneity,5)))
@@ -65,6 +68,14 @@ def evolver(queueop, mypop, application_runtime):
     application_end = timeit.default_timer()
 
     application_runtime = application_end - application_start
+
+    pop.bestRealisticize()
+
+
+    print('Best Fitness is              : ' + str(round(pop.best_fitness[-1],5)))
+    print('Realistic Fitness is         : ' + str(round(pop.realistic_fitness,5)))
+
+
     mypop = copy.deepcopy(pop)
 
     queueop.put((mypop, application_runtime))

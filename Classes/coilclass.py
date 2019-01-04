@@ -13,6 +13,8 @@ class Coil:
 
     Constructed so that the chromosomes define the behaviour of all update
     functions.
+
+    ##FIXME: All perfect coils should have loops at std_radius. Otherwise stack at r_min.
     """
 
     ### Instance Attributes:
@@ -36,6 +38,18 @@ class Coil:
     I_min   = myconst.I_min
     I_max   = myconst.I_max
 
+    ## Range of radii:
+    std_radius  = myconst.r_0
+    r_min       = myconst.r_min
+    r_max       = myconst.r_max
+
+    ## Realism Parameters:
+    div_width       = myconst.div_width
+    gap_precision   = myconst.gap_precision
+    mill_precision  = myconst.mill_precision # The
+    wire_width      = myconst.wire_width
+    wall_width      = myconst.wall_width
+
     ## Range of Fitness Calculation:
     calc_z_min  = myconst.calc_z_min
     calc_z_max  = myconst.calc_z_max
@@ -48,32 +62,48 @@ class Coil:
 
     ## Initial values
     loop_number     = myconst.loop_number
-    radius          = myconst.radius
+    radius          = myconst.r_0
     epsilon         = myconst.epsilon
     I_epsilon       = myconst.I_epsilon
-    wire_width      = myconst.wire_width
+    r_epsilon       = myconst.r_epsilon
+    # wire_width      = myconst.wire_width
     gap_precision   = myconst.gap_precision
+
+    chromosomes     = gen.random_ChromGen(loop_number, z_min, z_max, I_min, I_max, r_min, r_max)
+    genotype        = gen.chrom2geno(chromosomes)
+
+
+    # gen.lw_ChromGen(genotype, radius)
+    # gen.sol_ChromGen(genotype, loop_z_max, radius)
+    # gen.lwb_ChromGen(genoptype, radius)
+    # gen.hh_ChromGen(genotype, radius)
+    # gen.gap_ChromGen(genotype, precision, radius)
 
     ## Standards:
     # Building Solenoid:
-    sol_chromosomes = np.array(gen.sol_ChromGen(loop_number, z_max))
+    sol_chromosomes = np.array(gen.sol_ChromGen(genotype, z_max, std_radius))
     sol_genotype    = np.array(gen.chrom2geno(sol_chromosomes))
-    sol_homogeneity = mag.fitness_function(sol_genotype, field_points, radius)
+    sol_homogeneity = mag.fitness_function(sol_genotype, field_points)
 
     # Building Lee-Whiting:
-    lw_chromosomes = np.array(gen.lw_ChromGen(loop_number, radius))
+    lw_chromosomes = np.array(gen.lw_ChromGen(genotype, std_radius))
     lw_genotype    = np.array(gen.chrom2geno(lw_chromosomes))
-    lw_homogeneity = mag.fitness_function(lw_genotype, field_points, radius)
+    lw_homogeneity = mag.fitness_function(lw_genotype, field_points)
+
+    # Building 9/4 Lee-Whiting:
+    lwb_chromosomes = np.array(gen.lwb_ChromGen(genotype, std_radius))
+    lwb_genotype    = np.array(gen.chrom2geno(lwb_chromosomes))
+    lwb_homogeneity = mag.fitness_function(lwb_genotype, field_points)
 
     # Building Helmholtz:
-    hh_chromosomes = np.array(gen.hh_ChromGen(loop_number, radius))
+    hh_chromosomes = np.array(gen.hh_ChromGen(genotype, std_radius))
     hh_genotype    = np.array(gen.chrom2geno(hh_chromosomes))
-    hh_homogeneity = mag.fitness_function(hh_genotype, field_points, radius)
+    hh_homogeneity = mag.fitness_function(hh_genotype, field_points)
 
     # Building Gapped Solenoid:
-    gap_chromosomes = np.array(gen.gap_ChromGen(radius, z_max, loop_number, gap_precision))
+    gap_chromosomes = np.array(gen.gap_ChromGen(genotype, std_radius, z_max, mill_precision))
     gap_genotype    = np.array(gen.chrom2geno(gap_chromosomes))
-    gap_homogeneity = mag.fitness_function(gap_genotype, field_points, radius)
+    gap_homogeneity = mag.fitness_function(gap_genotype, field_points)
 
 
 
@@ -99,26 +129,28 @@ class Coil:
         """
         Genotype initialization. Randomly chooses loop positions along z-axis.
         Positions act as individual chromosomes.
+
+        ## NOTE: Currently note actually generating loops at different radii. The range is [r_min, r_min]
         """
-        self.chromosomes = gen.random_ChromGen(Coil.loop_number, Coil.z_min, Coil.z_max, Coil.I_min, Coil.I_max)
+        self.chromosomes = gen.random_ChromGen(Coil.loop_number, Coil.z_min, Coil.z_max, Coil.I_min, Coil.I_max, Coil.r_min, Coil.r_max)
 
 
     def genotype_update(self):
         """
         Takes chromosomes and converts to genotype.
         """
-        self.chromosomes    = gen.chromRealisticize(self.chromosomes, Coil.wire_width)
+        #self.chromosomes    = gen.chromRealisticize(self.chromosomes, Coil.wire_width, self.mill_precision)
         self.genotype       = gen.chrom2geno(self.chromosomes)
 
 
     def fitness_update(self):
         """Updates fitness of self"""
-        self.fitness = mag.fitness_function(self.genotype, Coil.zlist, Coil.radius)
+        self.fitness = mag.fitness_function(self.genotype, Coil.zlist)
 
 
     def field_update(self):
         """Updates the fields along the axis."""
-        args = [self.genotype, Coil.zlist, Coil.radius]
+        args = [self.genotype, Coil.zlist]
 
         self.field  = mag.field_along_axis(*args)
         self.ppm    = mag.ppm_field(*args)
@@ -131,9 +163,9 @@ class Coil:
         Note: Currently mutates ALL chromosomes, maybe change later.
         FIXME: Mutation probability must be handled externally.
         """
-        mutated_positions, mutated_currents  = gen.chrom_mutate(self.chromosomes, Coil.epsilon, Coil.I_epsilon)
+        mutated_positions, mutated_currents, mutated_radii  = gen.chrom_mutate(self.chromosomes, Coil.epsilon, Coil.I_epsilon, Coil.r_epsilon)
 
-        args = [mutated_positions, mutated_currents, Coil.z_min, Coil.z_max, Coil.I_min, Coil.I_max]
+        args = [mutated_positions, mutated_currents, mutated_radii, Coil.z_min, Coil.z_max, Coil.I_min, Coil.I_max, Coil.r_min, Coil.r_max]
 
         if (Coil.MutationScheme == 'PILEUP'):
             mutated_chromosomes = gen.pileupCorrect(*args)
